@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Университетская система</title>
+    <meta charset="utf-8">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0; padding: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .login-container {
+            background: white; padding: 40px; border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 400px;
+        }
+        h1 { 
+            text-align: center; color: #333; margin-bottom: 30px;
+            border-bottom: 2px solid #667eea; padding-bottom: 10px;
+        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #555; font-weight: bold; }
+        input[type="text"] {
+            width: 100%; padding: 12px; border: 2px solid #ddd;
+            border-radius: 5px; font-size: 16px; box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border-color: #667eea; outline: none;
+        }
+        button {
+            width: 100%; padding: 12px; background: #667eea;
+            color: white; border: none; border-radius: 5px;
+            font-size: 16px; cursor: pointer; font-weight: bold;
+        }
+        button:hover { background: #5a6fd8; }
+        .test-numbers {
+            margin-top: 20px; text-align: center; color: #666;
+            background: #f8f9fa; padding: 10px; border-radius: 5px;
+            font-size: 14px;
+        }
+        .success { 
+            background: #d4edda; color: #155724; padding: 15px; 
+            border-radius: 5px; border: 1px solid #c3e6cb; margin-top: 20px;
+        }
+        .error { 
+            background: #f8d7da; color: #721c24; padding: 15px; 
+            border-radius: 5px; border: 1px solid #f5c6cb; margin-top: 20px;
+        }
+        .schedule {
+            background: #f8f9fa; padding: 15px; border-radius: 5px;
+            margin-top: 15px; border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Университетская система</h1>
+        <form onsubmit="checkLogin(event)">
+            <div class="form-group">
+                <label for="phone">Номер телефона:</label>
+                <input type="text" id="phone" 
+                       placeholder="+79161234567" required 
+                       pattern="\+7[0-9]{10}">
+            </div>
+            <button type="submit">Войти в систему</button>
+        </form>
+        
+        <div class="test-numbers">
+            <strong>Тестовые номера для входа:</strong><br>
+            +79161234567<br>
+            +79031112233<br> 
+            +79265554466
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // База данных студентов (в реальном приложении это было бы на сервере)
+        const students = {
+            '+79161234567': {
+                name: 'Иванов Иван Иванович',
+                group: 'Группа 101',
+                phone: '+79161234567'
+            },
+            '+79031112233': {
+                name: 'Петров Петр Петрович', 
+                group: 'Группа 101',
+                phone: '+79031112233'
+            },
+            '+79265554466': {
+                name: 'Сидорова Мария Сергеевна',
+                group: 'Группа 102', 
+                phone: '+79265554466'
+            }
+        };
+
+        function checkLogin(event) {
+            event.preventDefault();
+            const phone = document.getElementById('phone').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (students[phone]) {
+                const student = students[phone];
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h3>ДОСТУП РАЗРЕШЕН</h3>
+                        <p><strong>Студент:</strong> ${student.name}</p>
+                        <p><strong>Группа:</strong> ${student.group}</p>
+                        <p><strong>Телефон:</strong> ${student.phone}</p>
+                        
+                        <div class="schedule">
+                            <h4>Ваше расписание на неделю:</h4>
+                            <strong>Понедельник:</strong><br>
+                            &nbsp;&nbsp;09:00-10:30 Высшая математика (ауд. 301)<br>
+                            &nbsp;&nbsp;11:00-12:30 Физика (лаб. 205)<br><br>
+                            
+                            <strong>Вторник:</strong><br>
+                            &nbsp;&nbsp;10:00-11:30 Программирование (ауд. 401)<br>
+                            &nbsp;&nbsp;12:00-13:30 Базы данных (комп. класс 3)<br><br>
+                            
+                            <strong>Среда:</strong><br>
+                            &nbsp;&nbsp;09:30-11:00 Алгоритмы (ауд. 305)<br>
+                            &nbsp;&nbsp;11:30-13:00 Веб-технологии (комп. класс 2)<br><br>
+                            
+                            <strong>Четверг:</strong><br>
+                            &nbsp;&nbsp;10:00-11:30 ОС (ауд. 410)<br>
+                            &nbsp;&nbsp;12:00-13:30 Сетевые технологии (лаб. 208)<br><br>
+                            
+                            <strong>Пятница:</strong><br>
+                            &nbsp;&nbsp;09:00-10:30 Теория вероятностей (ауд. 215)<br>
+                            &nbsp;&nbsp;11:00-12:30 Проектная деятельность (ауд. 301)
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>ОШИБКА ВХОДА</h3>
+                        <p>Номер телефона не найден в системе.</p>
+                        <p>Проверьте правильность ввода или обратитесь в деканат.</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
